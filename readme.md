@@ -28,7 +28,10 @@ Parametry (query string):
 - paymentDateFrom - określa zamówienia opłacone tylko od tej daty (**strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
 
 Przykład:
-`https://api.takedrop.pl/wholesaler/order?apiKey=sdfkjh23asdkjhk&paymentDateFrom=2020-11-26T11:34:31.810414`
+
+```
+https://api.takedrop.pl/wholesaler/order?apiKey=sdfkjh23asdkjhk&paymentDateFrom=2020-11-26T11:34:31.810414
+```
 
 ##### Odpowiedź:
 
@@ -148,7 +151,8 @@ Parametry (query string):
 - dateFrom - określa sprzedawców, którzy załączyli integrację tylko od tej daty (**strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
 
 Przykład:
-`https://api.takedrop.pl/wholesaler/merchant?apiKey=sdfkjh23asdkjhk&dateFrom=2020-11-26T11:34:31.810414`
+
+```https://api.takedrop.pl/wholesaler/merchant?apiKey=sdfkjh23asdkjhk&dateFrom=2020-11-26T11:34:31.810414```
 
 ##### Odpowiedź:
 
