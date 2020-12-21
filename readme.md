@@ -8,7 +8,7 @@ Panel administracyjny dostępny jest pod adresem [https://app2.takedrop.pl/](htt
 W celu uzyskania konta testowego skontaktuj się obsługą TakeDrop.
 
 Po otrzymaniu konta testowego Twój sklep będzie dostępny pod adresem **nazwa_sklepu**.takedrop.pl
-W sklepie domyślnie załączona jest jedna metoda płatności - PayU - w testowej konfiguracji sandbox. Po złożeniu testowego zamówienia w PayU sandbox należy wybrać dowolną metodę płatności i wybrać "pozytywna autoryzacja". Zamówienie zostanie oznaczone jako opłacone i będzie dostępne pod adresem API do pobierania zamówień.
+W sklepie domyślnie załączona jest jedna metoda płatności (PayU) w testowej konfiguracji sandbox. Po złożeniu testowego zamówienia i przekierowaniu należy wybrać dowolną metodę płatności i wybrać "pozytywna autoryzacja". Zamówienie zostanie oznaczone jako opłacone i będzie dostępne pod adresem API do pobierania zamówień.
 
 # Rest API
 
@@ -25,7 +25,7 @@ API umożliwia pobieranie zamówień. Określone w parametrze apiKey identyfikuj
 Parametry (query string):
 
 - apiKey - klucz dostępu unikatowy dla każdej hurtowni
-- paymentDateFrom - określa zamówienia opłacone tylko od tej daty (**uwaga, wymagana strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
+- paymentDateFrom - określa zamówienia opłacone tylko od tej daty (**strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
 
 Przykład:
 `https://api.takedrop.pl/wholesaler/order?apiKey=sdfkjh23asdkjhk&paymentDateFrom=2020-11-26T11:34:31.810414`
@@ -45,7 +45,7 @@ Tablica obiektów gdzie każdy obiekt zawiera:
   - postCode - kod pocztowy
   - city - miasto
   - countryCode - dwuliterowy kod kraju
-- merchant - obietk z emailem sprzedawcy
+- merchant - obiekt z emailem sprzedawcy
   - email - email sprzedawcy
 - items - tablica obiektów gdzie kazdy obiekt zawiera:
   - externalId - id produktu w hurtowni
@@ -86,7 +86,7 @@ Przykład odpowiedzi:
 ### Wysyłanie zamówień
 
 API przyjmuje informacje o statusie realizacji zamówienia i dodaje odpowiednie wpisy w widoku edycji zamówienia w sekcji "Szczegóły realizacji".
-Uwaga: **Nie są obsługiwane zamówienia zrealizowane częściowo**. Takie zamówienia zostaną odrzucone kodem błędu 400 Bad Request.
+Uwaga: **Nie są obsługiwane zamówienia zrealizowane częściowo**. Takie zamówienia zostaną odrzucone i zostanie zwrócony błąd.
 Wszystkie produkty podane w zapytaniu muszą się zgadzać i być w odpowiedniej ilości.
 
 ##### Zapytanie
@@ -101,7 +101,9 @@ Request body (json)
 
 - orderId - id zamówienia w TakeDrop
 - wholesalerOrderId - id zamówienia w hurtowni
-- status - "Sent" lub "Cancelled"
+- status - dostępne wartości:
+  - "Sent" - zamówienie wysłane z hurtowni
+  - "Cancelled" - zamówienie zostało anulowane przez hurtownię
 - trackingNumber - numer śledzenia paczki (jeśli istnieje)
 - value - kwota zamówienia w hurtowni
 - items - tablica obiektów, gdzie każdy obiekt zawiera:
@@ -130,7 +132,7 @@ Przykład:
 
 ##### Odpowiedź:
 
-Status 200 OK jeśli wszystko poszło OK. W przeciwnym razie status błędu.
+Status 200 OK w przypadku poprawnego zapisania danych. W przeciwnym razie status błędu.
 
 ### Pobieranie sprzedawców
 
@@ -143,7 +145,7 @@ API umożliwia pobieranie listy sprzedawców, którzy wybrali integracje z daną
 Parametry (query string):
 
 - apiKey - klucz dostępu unikatowy dla każdej hurtowni
-- dateFrom - określa sprzedawców, którzy załączyli integrację tylko od tej daty (**uwaga, wymagana strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
+- dateFrom - określa sprzedawców, którzy załączyli integrację tylko od tej daty (**strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
 
 Przykład:
 `https://api.takedrop.pl/wholesaler/merchant?apiKey=sdfkjh23asdkjhk&dateFrom=2020-11-26T11:34:31.810414`
