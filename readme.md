@@ -1,19 +1,18 @@
 # TakeDrop API
 
-Dokumentacja TakeDrop API. 
-Data aktualzacji: 21.12.2020
+Dokumentacja TakeDrop API.
 
 ## Informacje
 
-Panel administracyjny dostępny jest pod adresem [app2.takedrop.pl](https://app2.takedrop.pl)
+Panel administracyjny dostępny jest pod adresem [https://app2.takedrop.pl/](https://app2.takedrop.pl)
 W celu uzyskania konta testowego skontaktuj się obsługą TakeDrop.
 
-Po otrzymaniu konta testowego Twój sklep będzie dostępny pod adresem  **nazwa_sklepu**.takedrop.pl
+Po otrzymaniu konta testowego Twój sklep będzie dostępny pod adresem **nazwa_sklepu**.takedrop.pl
 W sklepie domyślnie załączona jest jedna metoda płatności - PayU - w testowej konfiguracji sandbox. Po złożeniu testowego zamówienia w PayU sandbox należy wybrać dowolną metodę płatności i wybrać "pozytywna autoryzacja". Zamówienie zostanie oznaczone jako opłacone i będzie dostępne pod adresem API do pobierania zamówień.
 
 # Rest API
 
-API znajduje się pod adresem ```https://api.takedrop.pl```
+API znajduje się pod adresem `https://api.takedrop.pl`
 
 ### Pobieranie zamówień
 
@@ -21,40 +20,41 @@ API umożliwia pobieranie zamówień. Określone w parametrze apiKey identyfikuj
 
 ##### Zapytanie
 
-```GET /wholesaler/order```
+`GET /wholesaler/order`
 
 Parametry (query string):
+
 - apiKey - klucz dostępu unikatowy dla każdej hurtowni
 - paymentDateFrom - określa zamówienia opłacone tylko od tej daty (**uwaga, wymagana strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
 
 Przykład:
-```https://api.takedrop.pl/wholesaler/order?apiKey=sdfkjh23asdkjhk&paymentDateFrom=2020-11-26T11:34:31.810414```
-
+`https://api.takedrop.pl/wholesaler/order?apiKey=sdfkjh23asdkjhk&paymentDateFrom=2020-11-26T11:34:31.810414`
 
 ##### Odpowiedź:
 
 Tablica obiektów gdzie każdy obiekt zawiera:
+
 - id - id zamówienia w TakeDrop
 - delivery - obiekt z danymi do dostawy
-    - methodName - nazwa wybranej metody dostawy
-    - fullName - imię i nazwisko
-    - email - email
-    - phone - telefon
-    - address1 - pierwsza linia adresu (ulica i numer)
-    - address2 - druga linia adresu (jeśli istnieje)
-    - postCode - kod pocztowy
-    - city - miasto
-    - countryCode - dwuliterowy kod kraju
+  - methodName - nazwa wybranej metody dostawy
+  - fullName - imię i nazwisko
+  - email - email
+  - phone - telefon
+  - address1 - pierwsza linia adresu (ulica i numer)
+  - address2 - druga linia adresu (jeśli istnieje)
+  - postCode - kod pocztowy
+  - city - miasto
+  - countryCode - dwuliterowy kod kraju
 - merchant - obietk z emailem sprzedawcy
-    - email - email sprzedawcy
+  - email - email sprzedawcy
 - items - tablica obiektów gdzie kazdy obiekt zawiera:
-    - externalId - id produktu w hurtowni
-    - quantity - ilosc danego produktu
-    - variants - tablica stringow słownie określająca dany warianty (jeśli istnieje dla danego produktu)
-    - combinationReference - identyfikator danej kombinacji (jeśli istnieje dla danego produktu)
-   
+  - externalId - id produktu w hurtowni
+  - quantity - ilosc danego produktu
+  - variants - tablica stringow słownie określająca dany warianty (jeśli istnieje dla danego produktu)
+  - combinationReference - identyfikator danej kombinacji (jeśli istnieje dla danego produktu)
+
 Przykład odpowiedzi:
-   
+
 ```
 [{
     id: 6158,
@@ -85,30 +85,32 @@ Przykład odpowiedzi:
 
 ### Wysyłanie zamówień
 
-API przyjmuje informacje o statusie relazacji zamówienia i dodaje odpowiednie wpisy w widoku edycji zamówienia w sekcji "Szczegóły realzacji".
-Uwaga: **Nie są obsługiwane zamówienia zrealizowane częściowo**. Takie zamówienia zostaną odrzucone kodem błędu 400 Bad Request. 
+API przyjmuje informacje o statusie realizacji zamówienia i dodaje odpowiednie wpisy w widoku edycji zamówienia w sekcji "Szczegóły realizacji".
+Uwaga: **Nie są obsługiwane zamówienia zrealizowane częściowo**. Takie zamówienia zostaną odrzucone kodem błędu 400 Bad Request.
 Wszystkie produkty podane w zapytaniu muszą się zgadzać i być w odpowiedniej ilości.
 
 ##### Zapytanie
 
-```PUT /wholesaler/order```
+`PUT /wholesaler/order`
 
 Parametry (query string):
+
 - apiKey - klucz dostępu unikatowy dla każdej hurtowni
 
 Request body (json)
+
 - orderId - id zamówienia w TakeDrop
 - wholesalerOrderId - id zamówienia w hurtowni
 - status - "Sent" lub "Cancelled"
 - trackingNumber - numer śledzenia paczki (jeśli istnieje)
 - value - kwota zamówienia w hurtowni
 - items - tablica obiektów, gdzie każdy obiekt zawiera:
-    - externalId - id produktu w hurtowni
-    - quantity - ilośc danego produktu
-    - combinationReference - identyfikator danej kombinacji
+  - externalId - id produktu w hurtowni
+  - quantity - ilośc danego produktu
+  - combinationReference - identyfikator danej kombinacji
 
 Przykład:
-   
+
 ```
 {
     "orderId": 5694,
@@ -119,7 +121,7 @@ Przykład:
     "items": [
             {
                 "externalId": 99450,
-                "quantity": 1,               
+                "quantity": 1,
                 "combinationReference": "AB3313GREEN"
             }
         ]
@@ -136,19 +138,20 @@ API umożliwia pobieranie listy sprzedawców, którzy wybrali integracje z daną
 
 ##### Zapytanie
 
-```GET /wholesaler/merchant```
+`GET /wholesaler/merchant`
 
 Parametry (query string):
+
 - apiKey - klucz dostępu unikatowy dla każdej hurtowni
-- dateFrom - określa sprzedawców którzy załączyli integrację tylko od tej daty (**uwaga, wymagana strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
+- dateFrom - określa sprzedawców, którzy załączyli integrację tylko od tej daty (**uwaga, wymagana strefa UTC**) w formacie ISO 8601 z dokładnością jak w przykładzie.
 
 Przykład:
-```https://api.takedrop.pl/wholesaler/merchant?apiKey=sdfkjh23asdkjhk&dateFrom=2020-11-26T11:34:31.810414```
-
+`https://api.takedrop.pl/wholesaler/merchant?apiKey=sdfkjh23asdkjhk&dateFrom=2020-11-26T11:34:31.810414`
 
 ##### Odpowiedź:
 
 Tablica obiektów gdzie każdy obiekt zawiera:
+
 - id - id sprzedawcy w TakeDrop
 - email - email
 - fullName - imię i nazwisko
@@ -161,6 +164,7 @@ Tablica obiektów gdzie każdy obiekt zawiera:
 - countryCode - dwuliterowy kod kraju
 
 Przykład odpowiedzi:
+
 ```
 [
     {
@@ -177,3 +181,9 @@ Przykład odpowiedzi:
     }
 ]
 ```
+
+# Pomoc
+
+W przypadku pytań należy kontaktować się bezpośrednio z obsługą TakeDrop.
+
+Data aktualizacji: 21.12.2020
